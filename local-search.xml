@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>感知器</title>
+    <link href="/2024/12/17/%E6%84%9F%E7%9F%A5%E5%99%A8/"/>
+    <url>/2024/12/17/%E6%84%9F%E7%9F%A5%E5%99%A8/</url>
+    
+    <content type="html"><![CDATA[<h1 id="感知器"><a href="#感知器" class="headerlink" title="感知器"></a>感知器</h1><h2 id="参数学习"><a href="#参数学习" class="headerlink" title="参数学习"></a>参数学习</h2><h2 id="感知器的收敛性"><a href="#感知器的收敛性" class="headerlink" title="感知器的收敛性"></a>感知器的收敛性</h2><h2 id="参数平均感知器"><a href="#参数平均感知器" class="headerlink" title="参数平均感知器"></a>参数平均感知器</h2><h2 id="扩展多分类"><a href="#扩展多分类" class="headerlink" title="扩展多分类"></a>扩展多分类</h2>]]></content>
+    
+    
+    <categories>
+      
+      <category>深度学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>线性模型</tag>
+      
+      <tag>深度学习</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Hello World</title>
     <link href="/2024/12/16/hello-world/"/>
     <url>/2024/12/16/hello-world/</url>
