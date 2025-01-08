@@ -11,6 +11,8 @@
   <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
   <link rel="icon" href="/img/preview.png">
   
+    <link rel="canonical" href="http://cshiaa.github.io/2024/12/20/负载均衡/nginx运维/"/>
+  
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -27,7 +29,7 @@
 <meta property="og:description" content="Nginx运维常用操作，例如：高可用、配置优化、日志管理">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-12-20T06:32:24.000Z">
-<meta property="article:modified_time" content="2024-12-23T08:47:33.289Z">
+<meta property="article:modified_time" content="2024-12-30T08:13:01.475Z">
 <meta property="article:author" content="cshiaa">
 <meta property="article:tag" content="Nginx">
 <meta property="article:tag" content="负载均衡">
@@ -44,6 +46,8 @@
   <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
 
@@ -229,7 +233,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.2k 字
+          3.3k 字
         
       </span>
     
@@ -240,7 +244,7 @@
         
         
         
-          27 分钟
+          28 分钟
         
       </span>
     
@@ -378,47 +382,80 @@
 </ul>
 <p><strong>调整<code>worker_processes</code></strong></p>
 <p>编辑<code>Nginx</code>配置文件修改参数</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">worker_processes</span> auto;  <span class="hljs-comment"># 自动检测系统的 CPU 核心数</span><br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">worker_processes</span> auto</span><span class="token punctuation">;</span>  <span class="token comment"># 自动检测系统的 CPU 核心数</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
 
 <p>手动设置数量</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">worker_processes</span> <span class="hljs-number">4</span>;     <span class="hljs-comment"># 设置为 4，适用于 4 核 CPU</span><br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">worker_processes</span> <span class="token number">4</span></span><span class="token punctuation">;</span>     <span class="token comment"># 设置为 4，适用于 4 核 CPU</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
 
 <p><strong>调整 <code>worker_connections</code></strong></p>
 <p><code>worker_connections</code>控制每个<code>worker</code>进程最大连接数</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">worker_connections</span> <span class="hljs-number">1024</span>;  <span class="hljs-comment"># 每个 worker 进程最多支持 1024 个连接</span><br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">worker_connections</span> <span class="token number">1024</span></span><span class="token punctuation">;</span>  <span class="token comment"># 每个 worker 进程最多支持 1024 个连接</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
 
 <p><strong>调整 <code>worker_rlimit_nofile</code></strong></p>
 <p><code>worker_rlimit_nofile</code> 设置每个<code>worker </code>进程可打开的最大文件描述符数</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">worker_rlimit_nofile</span> <span class="hljs-number">100000</span>;  <span class="hljs-comment"># 增加每个 worker 进程的文件句柄限制</span><br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">worker_rlimit_nofile</span> <span class="token number">100000</span></span><span class="token punctuation">;</span>  <span class="token comment"># 增加每个 worker 进程的文件句柄限制</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
 
 <h3 id="启用Gzip"><a href="#启用Gzip" class="headerlink" title="启用Gzip"></a>启用Gzip</h3><p>编译<code>Nginx</code>时启用<code>Gzip</code>模块</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash">./configure --with-http_gzip_static_module --with-http_gzip_module<br>make &amp;&amp; make install<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">./configure --with-http_gzip_static_module --with-http_gzip_module
+<span class="token function">make</span> <span class="token operator">&amp;&amp;</span> <span class="token function">make</span> <span class="token function">install</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
 
 <p>添加<code>Nginx</code>配置文件</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">http</span> &#123;<br>    ...<br>    <span class="hljs-attribute">gzip</span> <span class="hljs-literal">on</span>; <span class="hljs-comment"># 开启Gzip压缩功能</span><br>    <span class="hljs-attribute">gzip_min_length</span> <span class="hljs-number">1k</span>; <span class="hljs-comment"># 设置最小压缩文件大小为1KB</span><br>    <span class="hljs-attribute">gzip_buffers</span> <span class="hljs-number">4</span> <span class="hljs-number">16k</span>; <span class="hljs-comment"># 设置压缩缓冲区个数和大小</span><br>    <span class="hljs-attribute">gzip_http_version</span> <span class="hljs-number">1</span>.<span class="hljs-number">1</span>; <span class="hljs-comment"># 设置支持的HTTP协议版本为1.1</span><br>    <span class="hljs-attribute">gzip_comp_level</span> <span class="hljs-number">2</span>; <span class="hljs-comment"># 设置压缩级别为2（速度与压缩率的平衡）</span><br>    <span class="hljs-attribute">gzip_types</span> text/plain application/x-javascript text/css application/xml; <span class="hljs-comment"># 设置需要压缩的文件类型</span><br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">http</span></span> <span class="token punctuation">&#123;</span>
+    ...
+    <span class="token directive"><span class="token keyword">gzip</span> <span class="token boolean">on</span></span><span class="token punctuation">;</span> <span class="token comment"># 开启Gzip压缩功能</span>
+    <span class="token directive"><span class="token keyword">gzip_min_length</span> <span class="token number">1k</span></span><span class="token punctuation">;</span> <span class="token comment"># 设置最小压缩文件大小为1KB</span>
+    <span class="token directive"><span class="token keyword">gzip_buffers</span> <span class="token number">4</span> <span class="token number">16k</span></span><span class="token punctuation">;</span> <span class="token comment"># 设置压缩缓冲区个数和大小</span>
+    <span class="token directive"><span class="token keyword">gzip_http_version</span> 1.1</span><span class="token punctuation">;</span> <span class="token comment"># 设置支持的HTTP协议版本为1.1</span>
+    <span class="token directive"><span class="token keyword">gzip_comp_level</span> <span class="token number">2</span></span><span class="token punctuation">;</span> <span class="token comment"># 设置压缩级别为2（速度与压缩率的平衡）</span>
+    <span class="token directive"><span class="token keyword">gzip_types</span> text/plain application/x-javascript text/css application/xml</span><span class="token punctuation">;</span> <span class="token comment"># 设置需要压缩的文件类型</span>
+    ...
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <h3 id="缓存策略"><a href="#缓存策略" class="headerlink" title="缓存策略"></a>缓存策略</h3><h4 id="配置浏览器缓存时间"><a href="#配置浏览器缓存时间" class="headerlink" title="配置浏览器缓存时间"></a>配置浏览器缓存时间</h4><p>设置HTTP响应头中的<code>Expires</code>和<code>Cache-Control</code>字段，可以控制浏览器缓存的时间</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">location</span> <span class="hljs-regexp">~* \.(jpg|jpeg|gif|png|css|js)$</span> &#123;<br>    <span class="hljs-attribute">add_header</span> Cache-Control <span class="hljs-string">&quot;public, max-age=31536000&quot;</span>; <span class="hljs-comment"># 设置静态资源的缓存时间为1年（单位：秒）</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">location</span> ~* \.(jpg|jpeg|gif|png|css|js)$</span> <span class="token punctuation">&#123;</span>
+    <span class="token directive"><span class="token keyword">add_header</span> Cache-Control <span class="token string">"public, max-age=31536000"</span></span><span class="token punctuation">;</span> <span class="token comment"># 设置静态资源的缓存时间为1年（单位：秒）</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <h4 id="配置代理服务器缓存时间"><a href="#配置代理服务器缓存时间" class="headerlink" title="配置代理服务器缓存时间"></a>配置代理服务器缓存时间</h4><p>Nginx作为反向代理服务器使用，可以通过设置<code>proxy_cache_valid</code>和<code>proxy_cache_valid</code>指令来控制代理服务器的缓存时间</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">location</span> / &#123;<br>    <span class="hljs-attribute">proxy_pass</span> http://backend; <span class="hljs-comment"># 将请求转发到后端服务器</span><br>    <span class="hljs-attribute">proxy_cache</span> mycache; <span class="hljs-comment"># 启用缓存，命名为mycache</span><br>    <span class="hljs-attribute">proxy_cache_valid</span> <span class="hljs-number">200</span> <span class="hljs-number">302</span> <span class="hljs-number">60m</span>; <span class="hljs-comment"># 设置缓存有效时间为60分钟（单位：秒）</span><br>    <span class="hljs-attribute">proxy_cache_valid</span> <span class="hljs-number">404</span> <span class="hljs-number">1m</span>; <span class="hljs-comment"># 设置缓存有效时间为1分钟（单位：秒）</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">&#123;</span>
+    <span class="token directive"><span class="token keyword">proxy_pass</span> http://backend</span><span class="token punctuation">;</span> <span class="token comment"># 将请求转发到后端服务器</span>
+    <span class="token directive"><span class="token keyword">proxy_cache</span> mycache</span><span class="token punctuation">;</span> <span class="token comment"># 启用缓存，命名为mycache</span>
+    <span class="token directive"><span class="token keyword">proxy_cache_valid</span> <span class="token number">200</span> <span class="token number">302</span> <span class="token number">60m</span></span><span class="token punctuation">;</span> <span class="token comment"># 设置缓存有效时间为60分钟（单位：秒）</span>
+    <span class="token directive"><span class="token keyword">proxy_cache_valid</span> <span class="token number">404</span> <span class="token number">1m</span></span><span class="token punctuation">;</span> <span class="token comment"># 设置缓存有效时间为1分钟（单位：秒）</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <h3 id="优化文件访问方式"><a href="#优化文件访问方式" class="headerlink" title="优化文件访问方式"></a>优化文件访问方式</h3><p>处理静态文件时，Nginx默认会将文件读取到内存中进行处理。这种方式在大文件或高并发情况下会导致内存消耗过大，影响性能。因此，可以采用优化文件访问方式来提高性能</p>
 <h4 id="send-file"><a href="#send-file" class="headerlink" title="send_file"></a>send_file</h4><p><code>send_file()</code>函数可以直接将文件从磁盘读取并发送到网络，避免了数据在用户空间和内核空间之间的拷贝，提高了性能</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">http</span> &#123;<br>    ...<br>    <span class="hljs-attribute">sendfile</span> <span class="hljs-literal">on</span>; <span class="hljs-comment"># 开启sendfile()函数支持功能（需要操作系统支持）</span><br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">http</span></span> <span class="token punctuation">&#123;</span>
+    ...
+    <span class="token directive"><span class="token keyword">sendfile</span> <span class="token boolean">on</span></span><span class="token punctuation">;</span> <span class="token comment"># 开启sendfile()函数支持功能（需要操作系统支持）</span>
+    ...
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <h4 id="send-file-max-chunk"><a href="#send-file-max-chunk" class="headerlink" title="send_file_max_chunk"></a>send_file_max_chunk</h4><p>控制Nginx在发送文件时的最大分片大小</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">http</span> &#123;<br>    ...<br>    <span class="hljs-attribute">sendfile_max_chunk</span> <span class="hljs-number">1m</span>; <span class="hljs-comment"># 设置最大分片大小为1MB</span><br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">http</span></span> <span class="token punctuation">&#123;</span>
+    ...
+    <span class="token directive"><span class="token keyword">sendfile_max_chunk</span> <span class="token number">1m</span></span><span class="token punctuation">;</span> <span class="token comment"># 设置最大分片大小为1MB</span>
+    ...
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
-<h4 id="tcp-nopush"><a href="#tcp-nopush" class="headerlink" title="tcp_nopush"></a>tcp_nopush</h4><figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">http</span> &#123;<br>    ...<br>    <span class="hljs-attribute">tcp_nopush</span> <span class="hljs-literal">on</span>; <span class="hljs-comment"># 开启TCP_CORK选项</span><br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
+<h4 id="tcp-nopush"><a href="#tcp-nopush" class="headerlink" title="tcp_nopush"></a>tcp_nopush</h4><figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">http</span></span> <span class="token punctuation">&#123;</span>
+    ...
+    <span class="token directive"><span class="token keyword">tcp_nopush</span> <span class="token boolean">on</span></span><span class="token punctuation">;</span> <span class="token comment"># 开启TCP_CORK选项</span>
+    ...
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 
 
 <h2 id="日志管理"><a href="#日志管理" class="headerlink" title="日志管理"></a>日志管理</h2><h3 id="格式化输出"><a href="#格式化输出" class="headerlink" title="格式化输出"></a>格式化输出</h3><p><code>log_format</code>指令格式</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">log_format</span> name format &#123;<span class="hljs-attribute">format</span> ...&#125;<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">log_format</span> name format</span> <span class="token punctuation">&#123;</span>format ...<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
 
 <p><code>Nginx</code> 日志格式示例</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">log_format</span> compression <span class="hljs-string">&#x27;<span class="hljs-variable">$remote_addr</span> - <span class="hljs-variable">$remote_user</span> [<span class="hljs-variable">$time_local</span>] &#x27;</span><br>                       <span class="hljs-string">&#x27;&quot;<span class="hljs-variable">$request</span>&quot; <span class="hljs-variable">$status</span> <span class="hljs-variable">$bytes_sent</span> &#x27;</span><br>                       <span class="hljs-string">&#x27;&quot;<span class="hljs-variable">$http_referer</span>&quot; &quot;<span class="hljs-variable">$http_user_agent</span>&quot; &quot;<span class="hljs-variable">$gzip_ratio</span>&quot;&#x27;</span>;<br><br><span class="hljs-attribute">access_log</span> /spool/logs/nginx-access.log compression buffer=<span class="hljs-number">32k</span>;<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">log_format</span> compression <span class="token string">'<span class="token variable">$remote_addr</span> - <span class="token variable">$remote_user</span> [<span class="token variable">$time_local]</span> '</span>
+                       <span class="token string">'"<span class="token variable">$request</span>" <span class="token variable">$status</span> <span class="token variable">$bytes_sent</span> '</span>
+                       <span class="token string">'"<span class="token variable">$http_referer</span>" "<span class="token variable">$http_user_agent</span>" "<span class="token variable">$gzip_ratio</span>"'</span></span><span class="token punctuation">;</span>
+
+<span class="token directive"><span class="token keyword">access_log</span> /spool/logs/nginx-access.log compression buffer=32k</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <p>更详细的自定义配置可以根据下面设置</p>
 <table>
@@ -557,30 +594,61 @@
 <li><code>Nginx</code>日志分割模块</li>
 </ul>
 <p><code>Nginx</code>中日志路径配置</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">access_log</span> /var/log/nginx/access.log;<br><span class="hljs-attribute">error_log</span> /var/log/nginx/<span class="hljs-literal">error</span>.log;<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">access_log</span> /var/log/nginx/access.log</span><span class="token punctuation">;</span>
+<span class="token directive"><span class="token keyword">error_log</span> /var/log/nginx/error.log</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
 
 <h4 id="logrotate"><a href="#logrotate" class="headerlink" title="logrotate"></a>logrotate</h4><p>针对<code>Nginx</code>日志，<code>logrotate</code>配置文件示例</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs bash">/var/log/nginx/*.<span class="hljs-built_in">log</span> &#123;<br>    daily                      <span class="hljs-comment"># 每日切割</span><br>    rotate 7                   <span class="hljs-comment"># 保留 7 天的日志</span><br>    size 100M                  <span class="hljs-comment"># 单个日志文件限制为 100 MB</span><br>    compress                   <span class="hljs-comment"># 使用 gzip 压缩</span><br>    delaycompress              <span class="hljs-comment"># 延迟压缩到下次切割</span><br>    missingok                  <span class="hljs-comment"># 忽略日志缺失的错误</span><br>    notifempty                 <span class="hljs-comment"># 忽略空日志文件</span><br>    create 0640 nginx adm      <span class="hljs-comment"># 创建新的日志文件并设置权限</span><br>    sharedscripts<br>    postrotate<br>        [ -f /run/nginx.pid ] &amp;&amp; <span class="hljs-built_in">kill</span> -USR1 `<span class="hljs-built_in">cat</span> /run/nginx.pid` <span class="hljs-comment"># kill -USR1 信号通知 Nginx 重新打开日志文件</span><br>    endscript<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">&#x2F;var&#x2F;log&#x2F;nginx&#x2F;*.log &#123;
+    daily                      # 每日切割
+    rotate 7                   # 保留 7 天的日志
+    size 100M                  # 单个日志文件限制为 100 MB
+    compress                   # 使用 gzip 压缩
+    delaycompress              # 延迟压缩到下次切割
+    missingok                  # 忽略日志缺失的错误
+    notifempty                 # 忽略空日志文件
+    create 0640 nginx adm      # 创建新的日志文件并设置权限
+    sharedscripts
+    postrotate
+        [ -f &#x2F;run&#x2F;nginx.pid ] &amp;&amp; kill -USR1 &#96;cat &#x2F;run&#x2F;nginx.pid&#96; # kill -USR1 信号通知 Nginx 重新打开日志文件
+    endscript
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <p>将此配置保存到 <code>/etc/logrotate.d/nginx</code> 文件中，<code>logrotate</code> 会自动处理</p>
 <p><strong>排查验证</strong></p>
 <p>检查<code>logrotate</code>配置文件是否正确</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">sudo</span> logrotate -d /etc/logrotate.d/nginx<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> <span class="token function">logrotate</span> <span class="token parameter variable">-d</span> /etc/logrotate.d/nginx<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
 
 <ul>
 <li><code>-d</code> 表示调试模式，不执行实际操作，仅显示执行过程。</li>
 <li>如果有错误，输出日志会指出问题所在</li>
 </ul>
 <p>检查<code>Nginx</code>是否重新打开日志文件</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs dockerfile">postrotate<br>    [ -f /<span class="hljs-keyword">run</span><span class="language-bash">/nginx.pid ] &amp;&amp; <span class="hljs-built_in">kill</span> -USR1 `<span class="hljs-built_in">cat</span> /run/nginx.pid`</span><br>endscript<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">postrotate
+    [ -f &#x2F;run&#x2F;nginx.pid ] &amp;&amp; kill -USR1 &#96;cat &#x2F;run&#x2F;nginx.pid&#96;
+endscript<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 手动测试重启日志</span><br><span class="hljs-built_in">sudo</span> <span class="hljs-built_in">kill</span> -USR1 $(<span class="hljs-built_in">cat</span> /run/nginx.pid)<br><span class="hljs-comment"># 检查Nginx错误日志</span><br><span class="hljs-built_in">tail</span> -n 20 /var/log/nginx/error.log<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 手动测试重启日志</span>
+<span class="token function">sudo</span> <span class="token function">kill</span> <span class="token parameter variable">-USR1</span> <span class="token variable"><span class="token variable">$(</span><span class="token function">cat</span> /run/nginx.pid<span class="token variable">)</span></span>
+<span class="token comment"># 检查Nginx错误日志</span>
+<span class="token function">tail</span> <span class="token parameter variable">-n</span> <span class="token number">20</span> /var/log/nginx/error.log<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <p>检查<code>logrotate</code>定时任务</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-comment"># 确认 cron 任务存在</span><br><span class="hljs-built_in">cat</span> /etc/cron.daily/logrotate<br><br><span class="hljs-comment"># 手动测试logrotate, -f 强制执行日志轮转</span><br><span class="hljs-built_in">sudo</span> /usr/sbin/logrotate -f /etc/logrotate.conf<br><br><span class="hljs-comment"># 查看日志轮转执行结果</span><br><span class="hljs-built_in">cat</span> /var/lib/logrotate/status<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 确认 cron 任务存在</span>
+<span class="token function">cat</span> /etc/cron.daily/logrotate
+
+<span class="token comment"># 手动测试logrotate, -f 强制执行日志轮转</span>
+<span class="token function">sudo</span> /usr/sbin/logrotate <span class="token parameter variable">-f</span> /etc/logrotate.conf
+
+<span class="token comment"># 查看日志轮转执行结果</span>
+<span class="token function">cat</span> /var/lib/logrotate/status<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <h4 id="Shell脚本"><a href="#Shell脚本" class="headerlink" title="Shell脚本"></a>Shell脚本</h4><p>使用shell脚本进行切分<code>Nginx</code>日志</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">! /bin/bash</span><br><br>mv /var/log/nginx/access.log /var/log/nginx/access.log.old<br>mv /var/log/nginx/error.log /var/log/nginx/error.log.old<br>kill -USR1 $(cat /run/nginx.pid)<br><br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#! /bin/bash</span>
+
+<span class="token function">mv</span> /var/log/nginx/access.log /var/log/nginx/access.log.old
+<span class="token function">mv</span> /var/log/nginx/error.log /var/log/nginx/error.log.old
+<span class="token function">kill</span> <span class="token parameter variable">-USR1</span> <span class="token variable"><span class="token variable">$(</span><span class="token function">cat</span> /run/nginx.pid<span class="token variable">)</span></span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <p>可以自定义添加脚本许多其它功能：</p>
 <ul>
@@ -589,15 +657,65 @@
 <li>添加备份日期等</li>
 </ul>
 <h4 id="Nginx日志分割模块"><a href="#Nginx日志分割模块" class="headerlink" title="Nginx日志分割模块"></a>Nginx日志分割模块</h4><p>按域名记录日志</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">log_format</span> custom <span class="hljs-string">&#x27;<span class="hljs-variable">$host</span> <span class="hljs-variable">$remote_addr</span> - <span class="hljs-variable">$remote_user</span> [<span class="hljs-variable">$time_local</span>] &#x27;</span><br>                   <span class="hljs-string">&#x27;&quot;<span class="hljs-variable">$request</span>&quot; <span class="hljs-variable">$status</span> <span class="hljs-variable">$body_bytes_sent</span> &quot;<span class="hljs-variable">$http_referer</span>&quot; &#x27;</span><br>                   <span class="hljs-string">&#x27;&quot;<span class="hljs-variable">$http_user_agent</span>&quot;&#x27;</span>;<br><br><span class="hljs-attribute">map</span> <span class="hljs-variable">$host</span> <span class="hljs-variable">$log_file</span> &#123;<br>    host1.example.<span class="hljs-attribute">com</span> /var/log/nginx/host1.log;<br>    host2.example.<span class="hljs-attribute">com</span> /var/log/nginx/host2.log;<br>    <span class="hljs-attribute">default</span> /var/log/nginx/default.log;<br>&#125;<br><br><span class="hljs-attribute">access_log</span> /var/log/nginx/access.log custom;<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">log_format</span> custom <span class="token string">'<span class="token variable">$host</span> <span class="token variable">$remote_addr</span> - <span class="token variable">$remote_user</span> [<span class="token variable">$time_local]</span> '</span>
+                   <span class="token string">'"<span class="token variable">$request</span>" <span class="token variable">$status</span> <span class="token variable">$body_bytes_sent</span> "<span class="token variable">$http_referer</span>" '</span>
+                   <span class="token string">'"<span class="token variable">$http_user_agent</span>"'</span></span><span class="token punctuation">;</span>
+
+<span class="token directive"><span class="token keyword">map</span> <span class="token variable">$host</span> <span class="token variable">$log_file</span></span> <span class="token punctuation">&#123;</span>
+    <span class="token directive"><span class="token keyword">host1.example.com</span> /var/log/nginx/host1.log</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">host2.example.com</span> /var/log/nginx/host2.log</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">default</span> /var/log/nginx/default.log</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token directive"><span class="token keyword">access_log</span> /var/log/nginx/access.log custom</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<h2 id="开机自启"><a href="#开机自启" class="headerlink" title="开机自启"></a>开机自启</h2><p>使用<code>Systemd</code>管理，添加文件<code>/usr/lib/systemd/system/nginx.service</code></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-ini" data-language="ini"><code class="language-ini"><span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">Unit</span><span class="token punctuation">]</span></span>
+<span class="token key attr-name">Description</span><span class="token punctuation">=</span><span class="token value attr-value">The nginx HTTP and reverse proxy server</span>
+<span class="token key attr-name">After</span><span class="token punctuation">=</span><span class="token value attr-value">network-online.target</span>
+<span class="token key attr-name">Wants</span><span class="token punctuation">=</span><span class="token value attr-value">network-online.target</span>
+   
+<span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">Service</span><span class="token punctuation">]</span></span> 
+<span class="token key attr-name">Type</span><span class="token punctuation">=</span><span class="token value attr-value">forking</span>
+<span class="token key attr-name">PIDFile</span><span class="token punctuation">=</span><span class="token value attr-value">/usr/local/nginx/logs/nginx.pid</span>
+<span class="token key attr-name">ExecStartPre</span><span class="token punctuation">=</span><span class="token value attr-value">/usr/bin/rm -f /usr/local/nginx/logs/nginx.pid</span>
+<span class="token key attr-name">ExecStartPre</span><span class="token punctuation">=</span><span class="token value attr-value">/usr/local/nginx/sbin/nginx -t</span>
+<span class="token key attr-name">ExecStart</span><span class="token punctuation">=</span><span class="token value attr-value">/usr/local/nginx/sbin/nginx</span>
+<span class="token key attr-name">ExecReload</span><span class="token punctuation">=</span><span class="token value attr-value">/usr/local/nginx/sbin/nginx -s reload</span>
+<span class="token key attr-name">KillSignal</span><span class="token punctuation">=</span><span class="token value attr-value">SIGQUIT</span>
+<span class="token key attr-name">TimeoutStopSec</span><span class="token punctuation">=</span><span class="token value attr-value">5</span>
+<span class="token key attr-name">KillMode</span><span class="token punctuation">=</span><span class="token value attr-value">process</span>
+<span class="token key attr-name">PrivateTmp</span><span class="token punctuation">=</span><span class="token value attr-value">true</span> 
+   
+<span class="token section"><span class="token punctuation">[</span><span class="token section-name selector">Install</span><span class="token punctuation">]</span></span> 
+<span class="token key attr-name">WantedBy</span><span class="token punctuation">=</span><span class="token value attr-value">multi-user.target</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>添加开启启动</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sudo</span> systemctl daemon-reload
+<span class="token function">sudo</span> systemctl <span class="token builtin class-name">enable</span> nginx<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
+
+
 
 <h2 id="Nginx监控"><a href="#Nginx监控" class="headerlink" title="Nginx监控"></a>Nginx监控</h2><p>使用<code>nginx_status</code>模块</p>
 <p>启用<code>Nginx</code>状态监控页面<code>stub_status</code></p>
 <p><code>nginx.conf</code>中启用<code>stub_status</code>模块</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-section">server</span> &#123;<br>    <span class="hljs-attribute">listen</span> <span class="hljs-number">127.0.0.1:8080</span>;  <span class="hljs-comment"># 监听本地地址</span><br>    <span class="hljs-attribute">server_name</span> localhost;<br><br>    <span class="hljs-section">location</span> /nginx_status &#123;<br>        <span class="hljs-attribute">stub_status</span> <span class="hljs-literal">on</span>;<br>        <span class="hljs-attribute">access_log</span> <span class="hljs-literal">off</span>;<br>        <span class="hljs-attribute">allow</span> <span class="hljs-number">127.0.0.1</span>;   <span class="hljs-comment"># 仅允许本地访问</span><br>        <span class="hljs-attribute">deny</span> all;           <span class="hljs-comment"># 拒绝其他 IP 访问</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-nginx" data-language="nginx"><code class="language-nginx"><span class="token directive"><span class="token keyword">server</span></span> <span class="token punctuation">&#123;</span>
+    <span class="token directive"><span class="token keyword">listen</span> 127.0.0.1:8080</span><span class="token punctuation">;</span>  <span class="token comment"># 监听本地地址</span>
+    <span class="token directive"><span class="token keyword">server_name</span> localhost</span><span class="token punctuation">;</span>
+
+    <span class="token directive"><span class="token keyword">location</span> /nginx_status</span> <span class="token punctuation">&#123;</span>
+        <span class="token directive"><span class="token keyword">stub_status</span> <span class="token boolean">on</span></span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">access_log</span> <span class="token boolean">off</span></span><span class="token punctuation">;</span>
+        <span class="token directive"><span class="token keyword">allow</span> 127.0.0.1</span><span class="token punctuation">;</span>   <span class="token comment"># 仅允许本地访问</span>
+        <span class="token directive"><span class="token keyword">deny</span> all</span><span class="token punctuation">;</span>           <span class="token comment"># 拒绝其他 IP 访问</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <p>通过访问 <code>http://localhost:8080/nginx_status</code>，看到以下信息：</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">Active</span> connections: <span class="hljs-number">10</span> <br><span class="hljs-attribute">server</span> accepts handled requests<br> <span class="hljs-attribute">19</span> <span class="hljs-number">19</span> <span class="hljs-number">19</span> <br><span class="hljs-attribute">Reading</span>: <span class="hljs-number">0</span> Writing: <span class="hljs-number">1</span> Waiting: <span class="hljs-number">9</span><br></code></pre></td></tr></table></figure>
+<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">Active connections: 10 
+server accepts handled requests
+ 19 19 19 
+Reading: 0 Writing: 1 Waiting: 9<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
 
 <ul>
 <li><strong>Active connections</strong>：当前活动的连接数。</li>
@@ -697,6 +815,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2024/12/23/DevOps/CICD/JAVA%E7%A8%8B%E5%BA%8F%E5%AE%9E%E7%8E%B0CICD/" title="JAVA程序实现CICD">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">JAVA程序实现CICD</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
@@ -893,6 +1017,8 @@
   });
 </script>
 
+
+  <script  src="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js" ></script>
 
   <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
 

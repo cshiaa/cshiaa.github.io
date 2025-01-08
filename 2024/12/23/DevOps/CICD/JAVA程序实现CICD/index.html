@@ -1,0 +1,1081 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/preview.png">
+  
+    <link rel="canonical" href="http://cshiaa.github.io/2024/12/23/DevOps/CICD/JAVA程序实现CICD/"/>
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="cshiaa">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="JAVA程序实现CICD遇到的问题及解决思路">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JAVA程序实现CICD">
+<meta property="og:url" content="http://cshiaa.github.io/2024/12/23/DevOps/CICD/JAVA%E7%A8%8B%E5%BA%8F%E5%AE%9E%E7%8E%B0CICD/index.html">
+<meta property="og:site_name" content="cshiaa">
+<meta property="og:description" content="JAVA程序实现CICD遇到的问题及解决思路">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-12-23T09:10:53.000Z">
+<meta property="article:modified_time" content="2025-01-08T07:41:33.285Z">
+<meta property="article:author" content="cshiaa">
+<meta property="article:tag" content="JAVA">
+<meta property="article:tag" content="CICD">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>JAVA程序实现CICD - cshiaa</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/EmoryHuang/BlogBeautify@1.1/scroll.css">
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/EmoryHuang/BlogBeautify@1.1/gradient.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"cshiaa.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>cshiaa</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="JAVA程序实现CICD"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-23 17:10" pubdate>
+          2024年12月23日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">JAVA程序实现CICD</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>l</p>
+<h2 id="发布方案"><a href="#发布方案" class="headerlink" title="发布方案"></a>发布方案</h2><p>手动发布</p>
+<p>自动化发布：WebHook</p>
+<p>测试环境流程：CI和CD集成</p>
+<ul>
+<li>拉取代码</li>
+<li>编译打包</li>
+<li>部署</li>
+</ul>
+<p>生产环境流程：CI和CD分开</p>
+<h2 id="仓库管理"><a href="#仓库管理" class="headerlink" title="仓库管理"></a>仓库管理</h2><p>常用的源代码仓库管理工具：Gitlab、GitHub、SVN</p>
+<h2 id="编译打包"><a href="#编译打包" class="headerlink" title="编译打包"></a>编译打包</h2><h3 id="工具-Maven"><a href="#工具-Maven" class="headerlink" title="工具 Maven"></a>工具 Maven</h3><h4 id="常用命令及其说明"><a href="#常用命令及其说明" class="headerlink" title="常用命令及其说明"></a><strong>常用命令及其说明</strong></h4><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mvn clean</code></td>
+<td>删除 <code>target</code> 目录（即清理构建产物）</td>
+<td>在重新构建之前执行，以确保干净的构建环境</td>
+</tr>
+<tr>
+<td><code>mvn compile</code></td>
+<td>编译 <code>src/main/java</code> 下的源代码</td>
+<td>单独验证代码编译是否通过时</td>
+</tr>
+<tr>
+<td><code>mvn test-compile</code></td>
+<td>编译 <code>src/test/java</code> 下的测试代码</td>
+<td>在运行测试前确保测试代码无误</td>
+</tr>
+<tr>
+<td><code>mvn test</code></td>
+<td>行所有测试类（包括单元测试和集成测试）</td>
+<td>在提交代码前验证代码的正确性</td>
+</tr>
+<tr>
+<td><code>mvn package</code></td>
+<td>将项目打包为 JAR 或 WAR 文件，<code>target</code> 目录</td>
+<td>构建项目的主要流程，生成可运行的制品</td>
+</tr>
+<tr>
+<td><code>mvn install</code></td>
+<td>构建的制品安装到本地 Maven 仓库，供其他项目依赖</td>
+<td>项目间存在依赖关系时</td>
+</tr>
+<tr>
+<td><code>mvn verify</code></td>
+<td>运行集成测试，检查制品是否合格</td>
+<td></td>
+</tr>
+<tr>
+<td><code>mvn deploy</code></td>
+<td>将制品部署到远程仓库</td>
+<td></td>
+</tr>
+</tbody></table>
+<h4 id="实际常用命令"><a href="#实际常用命令" class="headerlink" title="实际常用命令"></a><strong>实际常用命令</strong></h4><p><strong>清除构建产物、安装到本地仓库、并跳过测试</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">maven clean <span class="token function">install</span> <span class="token parameter variable">-Dmaven.test.skip</span><span class="token operator">=</span>true <span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+
+<ul>
+<li><code>-Dmaven.test.skip=true </code>：跳过单元测试和集成测试阶段，<strong>不编译</strong>测试代码</li>
+</ul>
+<p><strong>指定Profile</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">maven clean <span class="token function">install</span> -P<span class="token operator">&lt;</span>profile_name<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+
+<p>激活特定的 Maven Profile，以应用不同的配置</p>
+<p>profile 通常定义在 <code>pom.xml</code> 或 <code>settings.xml</code> 中，用于控制依赖、插件、属性等</p>
+<p><code>pom.xml</code> 中配置示例</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>profiles</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>profile</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>dev<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>properties</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>env</span><span class="token punctuation">></span></span>development<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>env</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>properties</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>profile</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>profile</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>prod<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>properties</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>env</span><span class="token punctuation">></span></span>production<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>env</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>properties</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>profile</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>profiles</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mvn clean package <span class="token parameter variable">-Pdev</span>   <span class="token comment"># 激活 dev 配置</span>
+mvn clean package <span class="token parameter variable">-Pprod</span>  <span class="token comment"># 激活 prod 配置</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
+
+<p><strong>指定属性</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">maven clean <span class="token function">install</span> -D<span class="token operator">&lt;</span>property_name<span class="token operator">>=</span><span class="token operator">&lt;</span>value<span class="token operator">></span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+
+<ul>
+<li>在运行时动态传递属性值，用于替代 <code>pom.xml</code> 中的默认值</li>
+<li>可覆盖 <code>pom.xml</code> 或 Profile 中定义的属性</li>
+<li>使用场景为动态指定版本号、环境变量、构建选项等</li>
+</ul>
+<p><code>pom.xml</code>配置示例</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>build</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>finalName</span><span class="token punctuation">></span></span>$&#123;artifactId&#125;-$&#123;version&#125;-$&#123;build.env&#125;<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>finalName</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>build</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mvn clean package <span class="token parameter variable">-Dbuild.env</span><span class="token operator">=</span>dev
+<span class="token comment"># 生成的文件名可能为 my-app-1.0.0-dev.jar。</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
+
+<p><strong>指定子模块构建</strong></p>
+<p>项目目录结构</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">my-project&#x2F;
+│
+├── module-a&#x2F;
+│   ├── pom.xml
+│
+├── module-b&#x2F;
+│   ├── pom.xml
+│
+└── pom.xml<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p>方式一</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">cd</span> module-a
+mvn clean package<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
+
+<p>方式二</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mvn clean package <span class="token parameter variable">-pl</span> module-a<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+
+<p><strong>检查依赖时使用</strong></p>
+<p>展示项目依赖的层次结构，解决依赖冲突</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mvn dependency:tree<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+
+<p><strong>跳过测试</strong></p>
+<p>跳过单元测试阶段，仍会编译测试代码</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mvn clean package <span class="token parameter variable">-DskipTests</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+
+<h4 id="构建优化"><a href="#构建优化" class="headerlink" title="构建优化"></a>构建优化</h4><p><strong><code>-T</code> 开启多线程构建</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mvn clean <span class="token function">install</span> <span class="token parameter variable">-T</span> 1C <span class="token comment"># 1C 表示使用与 CPU 核心数相同的线程数</span>
+mvn clean <span class="token function">install</span> <span class="token parameter variable">-T</span> <span class="token number">4</span> <span class="token comment"># 使用 4 个线程</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
+
+<p><strong><code>-U</code> 强制更新SNAPSHOT 版本的依赖</strong></p>
+<p>当远程仓库的 SNAPSHOT 版本有更新，而本地未自动同步时</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mvn clean <span class="token function">install</span> <span class="token parameter variable">-U</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+
+<p><strong>配置镜像源</strong></p>
+<p><code>settings.xml</code> 中配置镜像源，内网中可以部署Nexus加速。外网环境可使用阿里云源</p>
+<p><strong>确保插件版本稳定</strong></p>
+<p>指定插件版本，避免因版本变化导致构建失败</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>plugin</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.apache.maven.plugins<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>maven-compiler-plugin<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>3.8.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>plugin</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p><strong>调整日志级别</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mvn clean <span class="token function">install</span> <span class="token parameter variable">-q</span>   <span class="token comment"># 静默模式, 只输出错误日志</span>
+mvn clean <span class="token function">install</span> <span class="token parameter variable">-X</span>   <span class="token comment"># 调试模式，输出详细日志</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
+
+<p><strong>指定Maven配置文件</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">mvn clean <span class="token function">install</span> <span class="token parameter variable">-s</span> /path/to/custom-settings.xml<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+
+<p><strong>配置环境变量</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># -Denv=&lt;environment></span>
+mvn clean package <span class="token parameter variable">-Denv</span><span class="token operator">=</span>test<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
+
+
+
+<h3 id="JAVA构建制品"><a href="#JAVA构建制品" class="headerlink" title="JAVA构建制品"></a>JAVA构建制品</h3><p>JAVA制品使用Maven打包时，制品默认以<code>JAR</code>包方式生成在<code>target</code>目录</p>
+<p><strong>appassembler-maven-plugin 插件</strong></p>
+<p>使用该插件打包时，会在<code>target</code>目录下生成一个<code>zip</code>压缩文件。根据下面<code>pom.xml</code>中配置，压缩文件包含以下目录</p>
+<ul>
+<li><strong><code>bin</code>：</strong> 服务的启动脚本路径，例如：.&#x2F;bin&#x2F;serivce_name {start|restart|stop|status}</li>
+<li><strong><code>conf</code>：</strong> 配置文件路径，从<code>src/main/resources</code>目录下的复制到<code>conf</code>目录下，可以自定义过滤规则。</li>
+<li><strong><code>lib</code>：</strong> 依赖和包存放路径</li>
+<li><strong><code>logs</code>：</strong> 日志存放路径</li>
+</ul>
+<figure><div class="code-wrapper"><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"> <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>plugin</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.codehaus.mojo<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>appassembler-maven-plugin<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>2.1.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>configuration</span><span class="token punctuation">></span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>platforms</span><span class="token punctuation">></span></span>
+			<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>platform</span><span class="token punctuation">></span></span>unix<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>platform</span><span class="token punctuation">></span></span>
+			<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>platform</span><span class="token punctuation">></span></span>windows<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>platform</span><span class="token punctuation">></span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>platforms</span><span class="token punctuation">></span></span>
+		<span class="token comment">&lt;!--包的存放路劲--></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>assembleDirectory</span><span class="token punctuation">></span></span>$&#123;project.build.directory&#125;/$&#123;project.name&#125;<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>assembleDirectory</span><span class="token punctuation">></span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>repositoryName</span><span class="token punctuation">></span></span>lib<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>repositoryName</span><span class="token punctuation">></span></span>
+		<span class="token comment">&lt;!--启动脚本目录--></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>binFolder</span><span class="token punctuation">></span></span>bin<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>binFolder</span><span class="token punctuation">></span></span>
+		<span class="token comment">&lt;!--配置文件路径--></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>configurationDirectory</span><span class="token punctuation">></span></span>conf<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>configurationDirectory</span><span class="token punctuation">></span></span>
+		<span class="token comment">&lt;!--是否copy配置文件--></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>copyConfigurationDirectory</span><span class="token punctuation">></span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>copyConfigurationDirectory</span><span class="token punctuation">></span></span>
+		<span class="token comment">&lt;!--从哪里copy配置文件--></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>configurationSourceDirectory</span><span class="token punctuation">></span></span>src/main/resources<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>configurationSourceDirectory</span><span class="token punctuation">></span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>includeConfigurationDirectoryInClasspath</span><span class="token punctuation">></span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>includeConfigurationDirectoryInClasspath</span><span class="token punctuation">></span></span>
+		<span class="token comment">&lt;!--flag 表示直接将jar放到lib 里面--></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>repositoryLayout</span><span class="token punctuation">></span></span>flat<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>repositoryLayout</span><span class="token punctuation">></span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>encoding</span><span class="token punctuation">></span></span>UTF-8<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>encoding</span><span class="token punctuation">></span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>logsDirectory</span><span class="token punctuation">></span></span>logs<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>logsDirectory</span><span class="token punctuation">></span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>tempDirectory</span><span class="token punctuation">></span></span>tmp<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>tempDirectory</span><span class="token punctuation">></span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>programs</span><span class="token punctuation">></span></span>
+			<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>program</span><span class="token punctuation">></span></span>
+				<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>mainClass</span><span class="token punctuation">></span></span>tk.shenyifeng.demo.DemoApplication<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>mainClass</span><span class="token punctuation">></span></span>
+				<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>id</span><span class="token punctuation">></span></span>demo<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>id</span><span class="token punctuation">></span></span>
+				<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>jvmSettings</span><span class="token punctuation">></span></span>
+					<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>extraArguments</span><span class="token punctuation">></span></span>
+						<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>extraArgument</span><span class="token punctuation">></span></span>-server<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>extraArgument</span><span class="token punctuation">></span></span>
+						<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>extraArgument</span><span class="token punctuation">></span></span>-Xms256M<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>extraArgument</span><span class="token punctuation">></span></span>
+						<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>extraArgument</span><span class="token punctuation">></span></span>-Xmx256M<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>extraArgument</span><span class="token punctuation">></span></span>
+						<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>extraArgument</span><span class="token punctuation">></span></span>-Xss512k<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>extraArgument</span><span class="token punctuation">></span></span>
+						<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>extraArgument</span><span class="token punctuation">></span></span>-Xloggc:@BASEDIR@/logs/demo_gc.log<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>extraArgument</span><span class="token punctuation">></span></span>
+						<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>extraArgument</span><span class="token punctuation">></span></span>-verbose:gc<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>extraArgument</span><span class="token punctuation">></span></span>
+						<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>extraArgument</span><span class="token punctuation">></span></span>-XX:+HeapDumpOnOutOfMemoryError<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>extraArgument</span><span class="token punctuation">></span></span>
+						<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>extraArgument</span><span class="token punctuation">></span></span>-XX:HeapDumpPath=@BASEDIR@/logs/java_heapdump.hprof<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>extraArgument</span><span class="token punctuation">></span></span>
+					<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>extraArguments</span><span class="token punctuation">></span></span>
+				<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>jvmSettings</span><span class="token punctuation">></span></span>
+			<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>program</span><span class="token punctuation">></span></span>
+		<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>programs</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>configuration</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>plugin</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+
+
+<h2 id="代码扫描"><a href="#代码扫描" class="headerlink" title="代码扫描"></a>代码扫描</h2><p>sonarqube</p>
+<h2 id="自动化测试"><a href="#自动化测试" class="headerlink" title="自动化测试"></a>自动化测试</h2><p>压测</p>
+<h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><h3 id="部署脚本"><a href="#部署脚本" class="headerlink" title="部署脚本"></a>部署脚本</h3><figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 定义应用程序的目录和文件</span>
+<span class="token assign-left variable">APP_DIR</span><span class="token operator">=</span><span class="token string">"/opt/myapp"</span>
+<span class="token assign-left variable">CURRENT_JAR</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$APP_DIR</span>/myapp-1.0.0.jar"</span>
+<span class="token assign-left variable">NEW_JAR</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$APP_DIR</span>/myapp-1.1.0.jar"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p><strong>停止服务</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 停止当前的 Java 服务进程</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"Stopping current service..."</span>
+<span class="token assign-left variable">CURRENT_PID</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span><span class="token function">ps</span> aux <span class="token operator">|</span> <span class="token function">grep</span> <span class="token string">"<span class="token variable">$CURRENT_JAR</span>"</span> <span class="token operator">|</span> <span class="token function">grep</span> <span class="token parameter variable">-v</span> <span class="token function">grep</span> <span class="token operator">|</span> <span class="token function">awk</span> <span class="token string">'&#123;print $2&#125;'</span><span class="token variable">)</span></span>
+
+<span class="token comment"># 如果当前进程存在，则停止它</span>
+<span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token parameter variable">-n</span> <span class="token string">"<span class="token variable">$CURRENT_PID</span>"</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+    <span class="token function">kill</span> <span class="token parameter variable">-15</span> <span class="token variable">$CURRENT_PID</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"Stopped current service with PID <span class="token variable">$CURRENT_PID</span>."</span>
+<span class="token keyword">else</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"No running service found."</span>
+<span class="token keyword">fi</span>
+
+<span class="token comment"># 检查服务是否完全退出，每隔一秒循环检查，完全退出时继续执行</span>
+<span class="token comment"># 1 检查进程</span>
+<span class="token comment"># 2 检查服务端口</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p><strong>备份服务</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 备份当前版本（可选）</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"Backing up current version..."</span>
+<span class="token assign-left variable">TIMESTAMP</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span><span class="token function">date</span> +<span class="token string">"%Y%m%d%H%M%S"</span><span class="token variable">)</span></span>
+<span class="token assign-left variable">BACKUP_JAR</span><span class="token operator">=</span><span class="token string">"<span class="token variable">$CURRENT_JAR</span>.<span class="token variable">$TIMESTAMP</span>"</span>
+<span class="token function">cp</span> <span class="token variable">$CURRENT_JAR</span> <span class="token variable">$BACKUP_JAR</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"Backup completed: <span class="token variable">$BACKUP_JAR</span>"</span>
+
+<span class="token comment"># 增加备份策略，保留几次备份</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p><strong>更新服务</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 替换为新版本 JAR 文件</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"Deploying new version..."</span>
+<span class="token function">cp</span> <span class="token variable">$NEW_JAR</span> <span class="token variable">$CURRENT_JAR</span>
+
+<span class="token comment"># 确保新版本 JAR 文件已正确复制</span>
+<span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token operator">!</span> <span class="token parameter variable">-f</span> <span class="token variable">$CURRENT_JAR</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"Failed to deploy new version. Exiting deployment."</span>
+    <span class="token builtin class-name">exit</span> <span class="token number">1</span>
+<span class="token keyword">fi</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p><strong>启动服务</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 启动新版本的 Java 服务, 限制内存大小为1024m</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"Starting new version of the service..."</span>
+<span class="token function">nohup</span> <span class="token function">java</span> <span class="token parameter variable">-Xms1024m</span> <span class="token parameter variable">-Xmx1024m</span> <span class="token parameter variable">-jar</span> <span class="token variable">$CURRENT_JAR</span> <span class="token operator">></span> <span class="token variable">$APP_DIR</span>/myapp.log <span class="token operator"><span class="token file-descriptor important">2</span>></span><span class="token file-descriptor important">&amp;1</span> <span class="token operator">&amp;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<p><strong>检查服务</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 需要检查服务启动成功，一般服务启动成功时，日志当中会有JVM Running日志，或者检查端口启动，或者服务有api健康检查接口</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+
+<p><strong>回滚</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 方案一：将jar包复制为特定名称，如果该文件存在，先将该文件备份成含日期文件</span>
+<span class="token comment"># 方案二：将jar包备份后的名称保存一个文件中，回滚时读取该文件</span>
+<span class="token comment"># 只能回滚上次</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>JAVA应用启动时，通常需要加载一些配置文件。以Spring Boot配置文件为例</p>
+<p><strong>默认自动加载的配置文件</strong></p>
+<ul>
+<li>对于<code>properties</code>文件，Spring Boot会默认加载<code>application.properties</code>文件</li>
+<li>对于<code>yaml</code>文件，Spring Boot会默认加载<code>application.yml</code>或<code>application.yaml</code>文件</li>
+</ul>
+<p>文件通常位于<code>src/main/resources</code>目录下</p>
+<p><strong>多环境配置文件</strong></p>
+<p>通过使用<code>spring.profiles.active</code>属性，可以指定当前活动的配置文件环境</p>
+<ul>
+<li><code>application-dev.yml</code>文件，用于开发环境的配置</li>
+<li><code>application-test.yml</code>文件，用于测试环境的配置</li>
+<li><code>application-prod.yml</code>文件，用于生产环境的配置</li>
+</ul>
+<blockquote>
+<p>其中<code>spring.profiles.active</code>属性可以在<code>application.yaml</code> 设置默认值，如果需要运行其它配置文件，可以在命令行参数中指定 -Dspring.profiles.active&#x3D;prod</p>
+<p>注：如果<code>application.yaml</code>中设置了<code>spring.profiles.active</code>属性，<code>application-dev.yaml</code>不需要再次设置该属性，否则会导致应用启动报错</p>
+</blockquote>
+<blockquote>
+<p>Spring Boot项目中配置文件通常放在<code>src/main/resources</code>目录下，假如现在有以下配置文件<code>application.yml</code>、<code>application-dev.yml</code>、<code>application-test.yml</code>、<code>application-prod.yml</code></p>
+<p>使用Maven进行编译打包时，会将这些配置文件都打仅生成的jar包中。如果应用启动命令为 </p>
+<p>java -server app.jar –spring-profiles-active&#x3D;test</p>
+<p>会先加载jar包中的<code>application.yml</code>和<code>application-test.yml</code>文件。如果在jar包同目录下有配置文件<code>application-test.yml</code>，则只会加载JAR包中的<code>application.yml</code>和 jar包同目录下的<code>application-test.yml</code></p>
+</blockquote>
+<p><strong>属性优先级</strong></p>
+<p>配置文件的加载顺序是：<code>application.yaml</code> &gt; <code>application-dev.yaml</code>, 因此后面的属性会覆盖前面相同的属性值</p>
+<p>属性的优先级：命令行参数 &lt; 系统配置 &lt; 环境变量 &lt; 配置文件</p>
+<h2 id="容器化"><a href="#容器化" class="headerlink" title="容器化"></a>容器化</h2><p>容器化的几种方式</p>
+<ul>
+<li>第三方插件</li>
+<li>Spring Boot官方插件</li>
+<li>Dockerfile</li>
+</ul>
+<h3 id="第三方插件"><a href="#第三方插件" class="headerlink" title="第三方插件"></a>第三方插件</h3><p><code>spotify/dockerfile-maven-plugin</code> 和 <code>spotify/docker-maven-plugin</code> 仓库都已只读</p>
+<p>推荐使用<code>fabric8/docker-maven-plugin</code></p>
+<p>GitHub地址：<a target="_blank" rel="noopener" href="https://github.com/fabric8io/docker-maven-plugin">https://github.com/fabric8io/docker-maven-plugin</a></p>
+<p>官方地址：<a target="_blank" rel="noopener" href="https://dmp.fabric8.io/#external-configuration">https://dmp.fabric8.io/#external-configuration</a></p>
+<p>使用 Fabric8 插件构建Java镜像示例，<code>pom.xml</code>添加以下配置：</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>properties</span><span class="token punctuation">></span></span>
+  <span class="token comment">&lt;!--镜像名称--></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>docker.name</span><span class="token punctuation">></span></span>jolokia/demo<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>docker.name</span><span class="token punctuation">></span></span>
+  <span class="token comment">&lt;!--别名--></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>docker.alias</span><span class="token punctuation">></span></span>service<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>docker.alias</span><span class="token punctuation">></span></span>
+  <span class="token comment">&lt;!--基础镜像--></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>docker.from</span><span class="token punctuation">></span></span>consol/tomcat:7.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>docker.from</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>docker.assembly.descriptor</span><span class="token punctuation">></span></span>src/main/docker-assembly.xml<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>docker.assembly.descriptor</span><span class="token punctuation">></span></span>
+  <span class="token comment">&lt;!--启动参数--></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>docker.env.JAVA_OPTS</span><span class="token punctuation">></span></span>-Xmx32m<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>docker.env.JAVA_OPTS</span><span class="token punctuation">></span></span>
+  <span class="token comment">&lt;!--镜像标签版本号--></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>docker.label.version</span><span class="token punctuation">></span></span>$&#123;project.version&#125;<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>docker.label.version</span><span class="token punctuation">></span></span>
+  <span class="token comment">&lt;!--运行用户--></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>docker.user</span><span class="token punctuation">></span></span>1001<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>docker.user</span><span class="token punctuation">></span></span>  
+  <span class="token comment">&lt;!--推送镜像仓库地址--></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>docker.registry</span><span class="token punctuation">></span></span>http://docker.registry.com<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>docker.registry</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>properties</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>build</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>plugins</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>plugin</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>io.fabric8<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>docker-maven-plugin<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>configuration</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>images</span><span class="token punctuation">></span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>image</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>external</span><span class="token punctuation">></span></span>
+              <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>type</span><span class="token punctuation">></span></span>properties<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>type</span><span class="token punctuation">></span></span>
+              <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>prefix</span><span class="token punctuation">></span></span>docker<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>prefix</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>external</span><span class="token punctuation">></span></span>
+          <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>image</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>images</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>configuration</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>plugin</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>plugins</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>build</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<h3 id="Dockerfile"><a href="#Dockerfile" class="headerlink" title="Dockerfile"></a>Dockerfile</h3><p>一个构建JAVA应用的<code>Dockerfile</code>示例</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-docker" data-language="docker"><code class="language-docker"><span class="token comment"># =======================</span>
+<span class="token comment"># 1. 构建阶段 (Build Stage)</span>
+<span class="token comment"># =======================</span>
+<span class="token comment"># 使用 Maven 构建应用</span>
+<span class="token instruction"><span class="token keyword">FROM</span> maven:3.8.4-openjdk-17-slim <span class="token keyword">AS</span> builder</span>
+
+<span class="token comment"># 设置工作目录</span>
+<span class="token instruction"><span class="token keyword">WORKDIR</span> /build</span>
+
+<span class="token comment"># 复制 pom.xml 和项目源码</span>
+<span class="token instruction"><span class="token keyword">COPY</span> pom.xml .</span>
+<span class="token instruction"><span class="token keyword">COPY</span> src ./src</span>
+
+<span class="token comment"># 下载依赖并构建项目</span>
+<span class="token instruction"><span class="token keyword">RUN</span> mvn clean install -DskipTests</span>
+
+<span class="token comment"># =======================</span>
+<span class="token comment"># 2. 运行阶段 (Run Stage)</span>
+<span class="token comment"># =======================</span>
+<span class="token comment"># 使用更轻量级的 JRE 镜像运行应用</span>
+<span class="token instruction"><span class="token keyword">FROM</span> openjdk:17-jdk-slim</span>
+
+<span class="token comment"># 设置环境变量</span>
+<span class="token instruction"><span class="token keyword">ENV</span> LANG C.UTF-8</span>
+
+<span class="token comment"># 创建目录来存放应用程序</span>
+<span class="token instruction"><span class="token keyword">WORKDIR</span> /app</span>
+
+<span class="token comment"># 从构建阶段复制 JAR 文件到运行镜像</span>
+<span class="token instruction"><span class="token keyword">COPY</span> <span class="token options"><span class="token property">--from</span><span class="token punctuation">=</span><span class="token string">builder</span></span> /build/target/myapp.jar /app/myapp.jar</span>
+
+<span class="token comment"># 暴露服务端口</span>
+<span class="token instruction"><span class="token keyword">EXPOSE</span> 8080</span>
+
+<span class="token comment"># 定义容器启动时执行的命令</span>
+<span class="token instruction"><span class="token keyword">CMD</span> [<span class="token string">"java"</span>, <span class="token string">"-jar"</span>, <span class="token string">"myapp.jar"</span>]</span>
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<ul>
+<li>编译打包时使用的时Maven的官方镜像，如果使用的时自己的Jar包依赖仓库，需重新构建镜像修改<code>setting.xml</code>配置</li>
+<li>Java程序依赖的JDK版本可以根据实际情况选择<ul>
+<li>趋向稳定性，可以自己构建基础JDK镜像，有可能镜像比较大，安全性一般</li>
+<li>趋向精简化，寻找一些官方提供的JDK镜像，一般基于apline的镜像最小，降低攻击面</li>
+</ul>
+</li>
+<li>尽量避免使用<code>root</code>用户运行Java程序</li>
+</ul>
+<p><strong>构建并上传镜像</strong></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">docker</span> build <span class="token parameter variable">-t</span> <span class="token number">192.168</span>.1.12:8080/myapp:1.0 <span class="token builtin class-name">.</span>
+<span class="token function">docker</span> pull <span class="token number">192.168</span>.1.12:8080/myapp:1.0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre></div></figure>
+
+
+
+<h2 id="规范化"><a href="#规范化" class="headerlink" title="规范化"></a>规范化</h2><p><strong>制品命名</strong></p>
+<p>pom.xml 配置服务名称、版本号</p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>com.test<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>name</span><span class="token punctuation">></span></span>hello<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>name</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>2025.01.01<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/DevOps/" class="category-chain-item">DevOps</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/JAVA/" class="print-no-link">#JAVA</a>
+      
+        <a href="/tags/CICD/" class="print-no-link">#CICD</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>JAVA程序实现CICD</div>
+      <div>http://cshiaa.github.io/2024/12/23/DevOps/CICD/JAVA程序实现CICD/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>cshiaa</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年12月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/12/23/DevOps/CICD/%E6%BA%90%E4%BB%A3%E7%A0%81%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7/" title="源代码管理工具">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">源代码管理工具</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/20/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/nginx%E8%BF%90%E7%BB%B4/" title="Nginx运维">
+                        <span class="hidden-mobile">Nginx运维</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script  src="https://lib.baomitu.com/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js" ></script>
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/gh/EmoryHuang/BlogBeautify@1.1/DynamicRibbon.min.js"></script>
+<script src="//cdn.jsdelivr.net/gh/EmoryHuang/BlogBeautify@1.1/runtime.min.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

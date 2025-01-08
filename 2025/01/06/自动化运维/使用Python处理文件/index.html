@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
   <link rel="icon" href="/img/preview.png">
   
-    <link rel="canonical" href="http://cshiaa.github.io/2024/12/17/DeepLearning/感知器/"/>
+    <link rel="canonical" href="http://cshiaa.github.io/2025/01/06/自动化运维/使用Python处理文件/"/>
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
@@ -21,24 +21,23 @@
   <meta name="author" content="cshiaa">
   <meta name="keywords" content="">
   
-    <meta name="description" content="感知器参数学习感知器的收敛性参数平均感知器扩展多分类">
+    <meta name="description" content="使用Python处理文件，包括文件的压缩、解压缩、切割、读取、转换等">
 <meta property="og:type" content="article">
-<meta property="og:title" content="感知器">
-<meta property="og:url" content="http://cshiaa.github.io/2024/12/17/DeepLearning/%E6%84%9F%E7%9F%A5%E5%99%A8/index.html">
+<meta property="og:title" content="使用Python处理文件">
+<meta property="og:url" content="http://cshiaa.github.io/2025/01/06/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/%E4%BD%BF%E7%94%A8Python%E5%A4%84%E7%90%86%E6%96%87%E4%BB%B6/index.html">
 <meta property="og:site_name" content="cshiaa">
-<meta property="og:description" content="感知器参数学习感知器的收敛性参数平均感知器扩展多分类">
+<meta property="og:description" content="使用Python处理文件，包括文件的压缩、解压缩、切割、读取、转换等">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-12-17T00:59:50.000Z">
-<meta property="article:modified_time" content="2024-12-20T08:15:05.548Z">
+<meta property="article:published_time" content="2025-01-06T02:56:43.000Z">
+<meta property="article:modified_time" content="2025-01-06T03:06:04.582Z">
 <meta property="article:author" content="cshiaa">
-<meta property="article:tag" content="线性模型">
-<meta property="article:tag" content="深度学习">
-<meta property="article:tag" content="Deeplearning">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="文件">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>感知器 - cshiaa</title>
+  <title>使用Python处理文件 - cshiaa</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -211,7 +210,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="感知器"></span>
+            <span id="subtitle" data-typed-text="使用Python处理文件"></span>
           
         </div>
 
@@ -222,8 +221,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-12-17 08:59" pubdate>
-          2024年12月17日 早上
+        <time datetime="2025-01-06 10:56" pubdate>
+          2025年1月6日 上午
         </time>
       </span>
     
@@ -234,7 +233,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          26 字
+          89 字
         
       </span>
     
@@ -282,12 +281,27 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">感知器</h1>
+            <h1 id="seo-header">使用Python处理文件</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="感知器"><a href="#感知器" class="headerlink" title="感知器"></a>感知器</h1><h2 id="参数学习"><a href="#参数学习" class="headerlink" title="参数学习"></a>参数学习</h2><h2 id="感知器的收敛性"><a href="#感知器的收敛性" class="headerlink" title="感知器的收敛性"></a>感知器的收敛性</h2><h2 id="参数平均感知器"><a href="#参数平均感知器" class="headerlink" title="参数平均感知器"></a>参数平均感知器</h2><h2 id="扩展多分类"><a href="#扩展多分类" class="headerlink" title="扩展多分类"></a>扩展多分类</h2>
+                <h2 id="压缩包文件"><a href="#压缩包文件" class="headerlink" title="压缩包文件"></a>压缩包文件</h2><p>一般通过文件名后缀来判别文件的压缩方式，常见的压缩方式有</p>
+<ul>
+<li>.tar.gz</li>
+<li>.zip</li>
+</ul>
+<h3 id="tar-gz"><a href="#tar-gz" class="headerlink" title=".tar.gz"></a>.tar.gz</h3><p>需要提前安装<code>tarfile</code>库, 安装命令<code>pip install tarfile</code></p>
+<figure><div class="code-wrapper"><pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">import</span> tarfile
+filename <span class="token operator">=</span> <span class="token string">"file.tar.gz"</span>
+tf <span class="token operator">=</span> tarfile<span class="token punctuation">.</span><span class="token builtin">open</span><span class="token punctuation">(</span>filename<span class="token punctuation">)</span>
+<span class="token comment"># 显示压缩包中的文件</span>
+<span class="token keyword">print</span><span class="token punctuation">(</span>tf<span class="token punctuation">.</span>getnames<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment"># 解压到指定目录</span>
+tf<span class="token punctuation">.</span>extractall<span class="token punctuation">(</span><span class="token string">'/test/'</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+
+<h3 id="zip"><a href="#zip" class="headerlink" title=".zip"></a>.zip</h3><h2 id="分割文件"><a href="#分割文件" class="headerlink" title="分割文件"></a>分割文件</h2><p>常见文件读取</p>
+
                 
               </div>
             
@@ -305,7 +319,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="category-chain-item">深度学习</a>
+  <a href="/categories/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/" class="category-chain-item">自动化运维</a>
   
   
 
@@ -320,11 +334,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B/" class="print-no-link">#线性模型</a>
+        <a href="/tags/Python/" class="print-no-link">#Python</a>
       
-        <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" class="print-no-link">#深度学习</a>
-      
-        <a href="/tags/Deeplearning/" class="print-no-link">#Deeplearning</a>
+        <a href="/tags/%E6%96%87%E4%BB%B6/" class="print-no-link">#文件</a>
       
     </div>
   
@@ -336,8 +348,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>感知器</div>
-      <div>http://cshiaa.github.io/2024/12/17/DeepLearning/感知器/</div>
+      <div>使用Python处理文件</div>
+      <div>http://cshiaa.github.io/2025/01/06/自动化运维/使用Python处理文件/</div>
     </div>
     <div class="license-meta">
       
@@ -349,7 +361,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年12月17日</div>
+          <div>2025年1月6日</div>
         </div>
       
       
@@ -376,6 +388,29 @@
 
 
 
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/01/06/%E6%95%B0%E6%8D%AE%E5%BA%93/Oracle%E6%8A%A5%E9%94%99%E8%AE%B0%E5%BD%95/" title="Oracle报错记录">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Oracle报错记录</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/12/23/DevOps/CICD/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9E%E7%8E%B0CICD/" title="数据库实现CICD">
+                        <span class="hidden-mobile">数据库实现CICD</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
               
             </div>
 
